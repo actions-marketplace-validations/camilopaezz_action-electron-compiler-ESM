@@ -1,15 +1,13 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const child_process_1 = require("child_process");
-const fs_1 = require("fs");
-const path_1 = require("path");
+import { execSync } from "child_process";
+import { existsSync, readFileSync } from "fs";
+import { join } from "path";
 const log = (msg) => console.log(`\n${msg}`);
 const exit = (msg) => {
     console.error(msg);
     process.exit(1);
 };
 const run = (cmd, cwd) => {
-    (0, child_process_1.execSync)(cmd, { encoding: "utf8", stdio: "inherit", cwd });
+    execSync(cmd, { encoding: "utf8", stdio: "inherit", cwd });
 };
 const getPlatform = () => {
     switch (process.platform) {
@@ -51,10 +49,10 @@ const getInput = (name, required) => {
     }
     const args = getInput("args") || "";
     const maxAttempts = parseInt(getInput("max_build_attempts") || "1");
-    const packageJsonPath = (0, path_1.join)(packageRoot, "package.json");
-    const yarnLockPath = (0, path_1.join)(packageRoot, "yarn.lock");
+    const packageJsonPath = join(packageRoot, "package.json");
+    const yarnLockPath = join(packageRoot, "yarn.lock");
     // NOTE: Determine which package mananger to run
-    const canUseYarn = packageManager === "yarn" && (0, fs_1.existsSync)(yarnLockPath);
+    const canUseYarn = packageManager === "yarn" && existsSync(yarnLockPath);
     const package_manager_used = packageManager === "yarn" && !canUseYarn ? "npm" : packageManager;
     // NOTE: Display used package manager
     if (packageManager === "yarn" && !canUseYarn) {
@@ -62,7 +60,7 @@ const getInput = (name, required) => {
     }
     log(`Using ${package_manager_used} for directory "${packageRoot}"`);
     // NOTE: package.json required
-    if (!(0, fs_1.existsSync)(packageJsonPath)) {
+    if (!existsSync(packageJsonPath)) {
         exit(`"package.json" not found in "${packageJsonPath}"`);
         return;
     }
@@ -100,7 +98,7 @@ const getInput = (name, required) => {
         else {
             // TODO: Use `yarn run ${buildScriptName} --if-present` once supported
             // https://github.com/yarnpkg/yarn/issues/6894
-            const pkgJson = JSON.parse((0, fs_1.readFileSync)(packageJsonPath, "utf8"));
+            const pkgJson = JSON.parse(readFileSync(packageJsonPath, "utf8"));
             if (pkgJson.scripts && pkgJson.scripts[buildScriptName]) {
                 run(`yarn run ${buildScriptName}`, packageRoot);
             }

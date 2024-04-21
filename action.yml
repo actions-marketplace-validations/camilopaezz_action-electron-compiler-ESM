@@ -1,6 +1,6 @@
-name: Electron-builder compiler action
-author: x6Pnda
-description: GitHub Action for building and compiling Electron applications using electron-builder
+name: Electron-builder compiler action ESM
+author: camilopaezz
+description: GitHub Action for building and compiling Electron applications using electron-builder 
 
 inputs:
     github_token:
@@ -57,7 +57,7 @@ inputs:
         default: "NPM"
 
 runs:
-    using: node16
+    using: node20
     main: dist/index.js
 
 branding:

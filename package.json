@@ -9,7 +9,7 @@
     "repository": "github:x6pnda/action-compile-electron",
     "license": "MIT",
     "private": true,
-    "type": "commonjs",
+    "type": "module",
     "main": "./dist/index.js",
     "scripts": {
         "build": "tsc -p tsconfig.build.json"
